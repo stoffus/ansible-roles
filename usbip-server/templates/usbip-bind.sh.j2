@@ -1,0 +1,21 @@
+#!/bin/bash
+
+SPOOL=/var/spool/usbip/bind
+
+if [[ $1 == "-q" ]]; then
+  exec &>/dev/null
+fi
+
+touch $SPOOL
+
+while [[ -e $SPOOL ]]; do
+  {% for bus_id in usb_devices %}
+  usbip bind -b {{ bus_id }}
+  {% endfor %}
+
+  sleep 10
+done
+
+{% for bus_id in usb_devices %}
+usbip unbind -b {{ bus_id }}
+{% endfor %}

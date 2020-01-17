@@ -1,0 +1,38 @@
+- name: Install base packages
+  apt:
+    name:
+      - usbip
+
+- name: Enable kernel modules needed for usbip
+  copy:
+    dest: /etc/modules-load.d/usbip.conf
+    content: |
+      vhci-hcd
+
+- name: Create dir for usbip lock file
+  file:
+    path: /var/spool/usbip
+    state: directory
+
+- name: Create dir for usbip script
+  file:
+    path: /opt/usbip
+    state: directory
+
+- name: Template out usbip-attach.sh
+  template:
+    src: usbip-attach.sh.j2
+    dest: /opt/usbip/usbip-attach.sh
+    mode: '0755'
+
+- name: Copy usbip-attach service to systemd
+  copy:
+    src: files/usbip-attach.service
+    dest: /etc/systemd/system/usbip-attach.service
+
+- name: Enable usbip-bind service
+  systemd:
+    name: usbip-bind
+    enabled: yes
+    state: started
+    daemon_reload: yes

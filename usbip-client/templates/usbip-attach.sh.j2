@@ -1,0 +1,21 @@
+#!/bin/bash
+
+SPOOL=/var/spool/usbip/attach
+
+if [[ $1 == "-q" ]]; then
+  exec &>/dev/null
+fi
+
+touch $SPOOL
+
+while [[ -e $SPOOL ]]; do
+  {% for device in usb_devices %}
+  usbip attach -r {{ device.host }} -b {{ device.bus_id }}
+  {% endfor %}
+
+  sleep 10
+done
+
+{% for device in usb_devices %}
+usbip detach -p {{ loop.index0 }}
+{% endfor %}
