@@ -1,0 +1,12 @@
+- name: update kernel modules
+  become: true
+  modprobe:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ usbip_server_kernel_modules }}"
+
+- name: restart usbip-bind
+  become: true
+  systemd:
+    name: usbip-bind
+    state: restarted

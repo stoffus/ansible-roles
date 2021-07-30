@@ -1,2 +1,7 @@
-usb_devices:
-  - '1-1.1'
+usbip_server_devices: []
+usbip_server_apt_packages:
+  - usbip
+usbip_server_kernel_modules:
+  - usbip-core
+  - usbip-host
+  - vhci-hcd

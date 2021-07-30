@@ -5,5 +5,10 @@ Use it in combination with the usbip-server role for the machine that actually h
 
 ## Example
 
-This role expects the devices to be exported to be put in a devices variable, see `defaults/main.yml`.
-You can find the bus id with `usbip list -r <host>`.
+You can find the bus id with `usbip list -r <usb-server-host>`.
+
+```yaml
+usbip_client_devices:
+  - host: <usb-server-host>
+    bus_id: 1-1.1
+```

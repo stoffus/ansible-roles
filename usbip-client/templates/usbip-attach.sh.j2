@@ -9,13 +9,13 @@ fi
 touch $SPOOL
 
 while [[ -e $SPOOL ]]; do
-  {% for device in usb_devices %}
-  usbip attach -r {{ device.host }} -b {{ device.bus_id }}
+  {% for device in usbip_client_devices %}
+usbip attach -r {{ device.host }} -b {{ device.bus_id }}
   {% endfor %}
 
   sleep 10
 done
 
-{% for device in usb_devices %}
+{% for device in usbip_client_devices %}
 usbip detach -p {{ loop.index0 }}
 {% endfor %}

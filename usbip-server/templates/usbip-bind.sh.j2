@@ -9,13 +9,13 @@ fi
 touch $SPOOL
 
 while [[ -e $SPOOL ]]; do
-  {% for bus_id in usb_devices %}
-  usbip bind -b {{ bus_id }}
+  {% for device in usbip_server_devices %}
+usbip bind -b {{ device.bus_id }}
   {% endfor %}
 
   sleep 10
 done
 
-{% for bus_id in usb_devices %}
-usbip unbind -b {{ bus_id }}
+{% for device in usbip_server_devices %}
+usbip unbind -b {{ device.bus_id }}
 {% endfor %}

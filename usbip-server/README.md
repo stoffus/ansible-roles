@@ -5,5 +5,9 @@ Use it in combination with the usbip-client role for the consuming machine.
 
 ## Example
 
-This role expects the devices' bus id to be exported to be put in a devices variable, see `defaults/main.yml`.
 You can find the bus id with `usbip list -l`.
+
+```yaml
+usbip_server_devices:
+  - 1-1.1 # i.e. bus id
+```

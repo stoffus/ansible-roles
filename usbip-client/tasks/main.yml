@@ -1,38 +1,50 @@
 - name: Install base packages
+  become: true
   apt:
-    name:
-      - usbip
+    name: "{{ usbip_client_apt_packages }}"
 
 - name: Enable kernel modules needed for usbip
+  become: true
   copy:
     dest: /etc/modules-load.d/usbip.conf
-    content: |
-      vhci-hcd
+    content: "{{ usbip_client_kernel_modules | join('\n') }}\n"
+    mode: 0644
+  notify:
+    - update kernel modules
 
 - name: Create dir for usbip lock file
+  become: true
   file:
     path: /var/spool/usbip
     state: directory
+    mode: 0755
 
 - name: Create dir for usbip script
+  become: true
   file:
     path: /opt/usbip
     state: directory
+    mode: 0755
 
 - name: Template out usbip-attach.sh
+  become: true
   template:
     src: usbip-attach.sh.j2
     dest: /opt/usbip/usbip-attach.sh
-    mode: '0755'
+    mode: 0755
+  notify:
+    - restart usbip-attach
 
 - name: Copy usbip-attach service to systemd
+  become: true
   copy:
     src: files/usbip-attach.service
     dest: /etc/systemd/system/usbip-attach.service
 
-- name: Enable usbip-bind service
+- name: Enable usbip-attach service
+  become: true
   systemd:
-    name: usbip-bind
+    name: usbip-attach
     enabled: yes
     state: started
     daemon_reload: yes
